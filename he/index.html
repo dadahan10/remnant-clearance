@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Room for What's Next — Diana Rafael Archive</title>
-<meta property="og:title" content="Room for What's Next — Diana Rafael Archive"/>
-<meta property="og:description" content="The studio archive is clearing to make way for REMNANT. One-of-a-kind pieces, offered once."/>
+<title>מפנים מקום לחדש — ארכיון Diana Rafael</title>
+<meta property="og:title" content="מפנים מקום לחדש — ארכיון Diana Rafael"/>
+<meta property="og:description" content="ארכיון הסטודיו נסגר כדי לפנות מקום ל-REMNANT. פריטים יחידים במינם, מוצעים פעם אחת."/>
 <meta property="og:type" content="website"/>
 <meta property="og:image" content="https://dadahan10.github.io/remnant-clearance/img/hero.jpg"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Heebo:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
 :root{
   --ink:#1a1416;--cream:#f4efe9;--paper:#fbf8f4;--burgundy:#7a2e36;--blush:#8b3d45;
@@ -17,21 +17,21 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:Manrope,system-ui,sans-serif;background:var(--cream);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+body{font-family:Heebo,system-ui,sans-serif;background:var(--cream);color:var(--ink);line-height:1.7;-webkit-font-smoothing:antialiased}
 .serif{font-family:'Cormorant Garamond',Georgia,serif}
 img{max-width:100%;display:block}
 a{color:inherit}
 .wrap{max-width:1200px;margin:0 auto;padding:0 24px}
 
-/* ---------- hero (split) ---------- */
+/* hero */
 .hero{display:grid;grid-template-columns:1.05fr .95fr;min-height:clamp(460px,72vh,720px);border-bottom:1px solid var(--line)}
 .hero .txt{display:flex;flex-direction:column;justify-content:center;padding:56px clamp(24px,5vw,72px)}
-.hero .kicker{letter-spacing:.34em;font-size:12px;color:var(--burgundy);text-transform:uppercase;margin-bottom:22px;font-weight:600}
-.hero h1{font-size:clamp(44px,6.2vw,84px);font-weight:500;line-height:.98;letter-spacing:-.015em}
-.hero h1 em{font-style:italic;color:var(--burgundy)}
-.hero p{max-width:440px;margin:24px 0 0;color:#5c534e;font-size:17px}
-.hero .note{margin-top:30px;font-size:12px;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;font-weight:600}
-.hero .pic{background:#e9e1d7 url('img/hero.jpg') center 22%/cover no-repeat}
+.hero .kicker{letter-spacing:.06em;font-size:13px;color:var(--burgundy);margin-bottom:22px;font-weight:600}
+.hero h1{font-family:'Heebo',sans-serif;font-size:clamp(40px,5.6vw,76px);font-weight:600;line-height:1.02;letter-spacing:-.01em}
+.hero h1 em{font-style:normal;color:var(--burgundy)}
+.hero p{max-width:460px;margin:22px 0 0;color:#5c534e;font-size:17px}
+.hero .note{margin-top:28px;font-size:12.5px;letter-spacing:.02em;color:var(--gold);font-weight:600}
+.hero .pic{background:#e9e1d7 url('../img/hero.jpg') center 22%/cover no-repeat}
 @media(max-width:820px){
   .hero{grid-template-columns:1fr;min-height:0}
   .hero .pic{order:-1;height:56vh;min-height:340px}
@@ -39,34 +39,34 @@ a{color:inherit}
   .hero p{margin-inline:auto}
 }
 
-/* ---------- controls bar ---------- */
+/* controls */
 .bar{position:sticky;top:0;z-index:30;background:rgba(244,239,233,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .bar .wrap{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center;padding:12px 24px}
-.chip{border:1px solid var(--line);background:none;padding:8px 16px;border-radius:40px;font:inherit;font-size:13px;font-weight:500;cursor:pointer;color:var(--ink);transition:.18s;white-space:nowrap}
+.chip{border:1px solid var(--line);background:none;padding:8px 16px;border-radius:40px;font:inherit;font-size:13.5px;font-weight:500;cursor:pointer;color:var(--ink);transition:.18s;white-space:nowrap}
 .chip:hover{border-color:var(--ink)}
 .chip.on{background:var(--ink);color:var(--cream);border-color:var(--ink)}
 .cur{margin-inline-start:auto;display:flex;gap:8px}
 @media(max-width:680px){.cur{margin-inline-start:0;width:100%;justify-content:center;margin-top:4px}}
 
-/* ---------- grid ---------- */
-.count{text-align:center;color:var(--muted);font-size:13px;letter-spacing:.04em;padding:26px 0 4px}
+/* grid */
+.count{text-align:center;color:var(--muted);font-size:13.5px;padding:26px 0 4px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:38px 26px;padding:26px 0 84px}
 .card{cursor:pointer;position:relative}
 .ph{aspect-ratio:1;background:#ece4da;border-radius:12px;overflow:hidden;position:relative;box-shadow:var(--shadow)}
 .ph img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
 .card:hover .ph img{transform:scale(1.045)}
-.noimg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);font-size:11px;letter-spacing:.16em;padding:20px}
-.badge{position:absolute;top:11px;inset-inline-start:11px;background:var(--burgundy);color:#fff;font-weight:700;font-size:15px;padding:6px 11px;border-radius:7px;letter-spacing:.01em;box-shadow:0 3px 10px rgba(0,0,0,.18)}
+.noimg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);font-size:12px;letter-spacing:.04em;padding:20px}
+.badge{position:absolute;top:11px;inset-inline-start:11px;background:var(--burgundy);color:#fff;font-weight:700;font-size:15px;padding:6px 11px;border-radius:7px;box-shadow:0 3px 10px rgba(0,0,0,.18)}
 .badge.rare{background:var(--gold)}
-.card h3{font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:600;margin-top:15px;line-height:1.15;letter-spacing:.005em}
-.card .det{font-size:12.5px;color:var(--muted);margin-top:4px;letter-spacing:.02em}
+.card h3{font-size:21px;font-weight:700;margin-top:15px;line-height:1.25}
+.card .det{font-size:13px;color:var(--muted);margin-top:4px}
 .price{display:flex;align-items:center;gap:9px;margin-top:11px;flex-wrap:wrap}
-.price .off{background:var(--burgundy);color:#fff;font-weight:700;font-size:12px;padding:3px 8px;border-radius:5px}
-.price .now{font-size:21px;font-weight:700;letter-spacing:-.01em}
+.price .off{background:var(--burgundy);color:#fff;font-weight:700;font-size:12.5px;padding:3px 8px;border-radius:5px}
+.price .now{font-size:21px;font-weight:700}
 .price .was{font-size:13.5px;color:var(--muted);text-decoration:line-through}
 .price .por{font-size:15px;color:var(--gold);font-weight:600}
 
-/* ---------- modal ---------- */
+/* modal */
 .modal{position:fixed;inset:0;z-index:100;background:rgba(26,20,22,.6);display:none;overflow-y:auto}
 .modal.open{display:block}
 .sheet{background:var(--cream);max-width:1040px;margin:36px auto;border-radius:16px;overflow:hidden;box-shadow:0 30px 90px -30px rgba(0,0,0,.6)}
@@ -83,9 +83,9 @@ a{color:inherit}
 .info{padding:38px}
 @media(max-width:640px){.info{padding:26px}}
 .info .close{float:inline-end;font-size:30px;cursor:pointer;color:var(--muted);line-height:.8}
-.info .type{font-size:11px;letter-spacing:.18em;color:var(--burgundy);text-transform:uppercase;margin:6px 0 12px;font-weight:600}
-.info h2{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:600;line-height:1.08;max-width:92%}
-.info .det{color:#5c534e;font-size:15px;margin-top:8px;letter-spacing:.02em}
+.info .type{font-size:12.5px;letter-spacing:.02em;color:var(--burgundy);margin:6px 0 12px;font-weight:600}
+.info h2{font-size:30px;font-weight:700;line-height:1.15;max-width:92%}
+.info .det{color:#5c534e;font-size:15px;margin-top:8px}
 .pb{margin:24px 0;padding:22px;background:var(--paper);border:1px solid var(--line);border-radius:12px}
 .pb .head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .pb .off{background:var(--burgundy);color:#fff;font-weight:700;font-size:15px;padding:6px 12px;border-radius:7px}
@@ -94,18 +94,17 @@ a{color:inherit}
 .pb .was s{margin-inline-end:7px}
 .pb .save{color:var(--burgundy);font-weight:600}
 .pb .alt{font-size:14px;color:#5c534e;margin-top:6px}
-.pb .vat{font-size:12px;color:var(--muted);margin-top:8px}
+.pb .vat{font-size:12.5px;color:var(--muted);margin-top:8px}
 .pb .por{font-size:22px;color:var(--gold);font-weight:600}
-.specs{width:100%;border-collapse:collapse;font-size:14px}
+.specs{width:100%;border-collapse:collapse;font-size:14.5px}
 .specs td{padding:9px 0;border-bottom:1px solid var(--line);vertical-align:top}
 .specs td:first-child{color:var(--muted);width:40%}
-.cta{display:block;text-align:center;background:var(--ink);color:var(--cream);text-decoration:none;padding:16px;border-radius:9px;margin-top:22px;font-weight:600;letter-spacing:.03em;transition:.2s}
+.cta{display:block;text-align:center;background:var(--ink);color:var(--cream);text-decoration:none;padding:16px;border-radius:9px;margin-top:22px;font-weight:600;letter-spacing:.02em;transition:.2s}
 .cta:hover{background:var(--burgundy)}
-.viewlink{display:block;text-align:center;margin-top:12px;font-size:13px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.viewlink{display:block;text-align:center;margin-top:12px;font-size:13.5px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
 
-/* ---------- states + footer ---------- */
 .state{text-align:center;padding:80px 24px;color:var(--muted)}
-footer{text-align:center;padding:56px 24px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+footer{text-align:center;padding:56px 24px;border-top:1px solid var(--line);color:var(--muted);font-size:13.5px}
 footer .serif{font-size:24px;color:var(--ink);display:block;margin-bottom:10px;letter-spacing:.04em}
 footer a{color:var(--burgundy)}
 </style>
@@ -114,52 +113,57 @@ footer a{color:var(--burgundy)}
 
 <div class="hero">
   <div class="txt">
-    <div class="kicker">Before REMNANT</div>
-    <h1 class="serif">Room for<br/>what's <em>next</em></h1>
-    <p>The studio archive is clearing to make way for REMNANT, the new collection. Each piece is one of one — offered once, then retired.</p>
-    <div class="note">One of each · Never remade · Ships worldwide</div>
+    <div class="kicker">לפני REMNANT</div>
+    <h1>מפנים מקום<br/><em>לחדש</em></h1>
+    <p>ארכיון הסטודיו נסגר כדי לפנות מקום ל-REMNANT, הקולקציה החדשה. כל פריט הוא יחיד במינו — מוצע פעם אחת, ואז נעלם.</p>
+    <div class="note">אחד מכל דגם · לא משוכפל · משלוח לכל העולם</div>
   </div>
-  <div class="pic" role="img" aria-label="Diana Rafael archive"></div>
+  <div class="pic" role="img" aria-label="ארכיון Diana Rafael"></div>
 </div>
 
 <div class="bar"><div class="wrap">
-  <button class="chip on" data-f="all">All</button>
-  <button class="chip" data-f="Ring">Rings</button>
-  <button class="chip" data-f="Earrings">Earrings</button>
-  <button class="chip" data-f="Pendant">Pendants</button>
-  <button class="chip" data-f="Bracelet">Bracelets</button>
+  <button class="chip on" data-f="all">הכל</button>
+  <button class="chip" data-f="Ring">טבעות</button>
+  <button class="chip" data-f="Earrings">עגילים</button>
+  <button class="chip" data-f="Pendant">תליונים</button>
+  <button class="chip" data-f="Bracelet">צמידים</button>
   <span class="cur">
-    <button class="chip on" data-c="usd">$ USD</button>
-    <button class="chip" data-c="ils">₪ ILS</button>
+    <button class="chip on" data-c="ils">₪ שקל</button>
+    <button class="chip" data-c="usd">$ דולר</button>
   </span>
 </div></div>
 
 <div class="wrap">
   <div class="count" id="count"></div>
   <div class="grid" id="grid"></div>
-  <div class="state" id="state">Loading the archive…</div>
+  <div class="state" id="state">טוען את הארכיון…</div>
 </div>
 
 <footer>
   <span class="serif">DIANA RAFAEL</span>
-  Natural, ethically sourced diamonds · Handmade in the studio<br/>
-  Questions? <a href="https://wa.me/972543976983">Message us on WhatsApp</a>
+  יהלומים טבעיים ממקור אתי · עבודת יד בסטודיו<br/>
+  שאלות? <a href="https://wa.me/972543976983">כתבו לנו בוואטסאפ</a>
 </footer>
 
 <div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
 
 <script>
 /* ============ config ============ */
-// ponytail: bootstrap source is the committed data.csv so the page works the moment it's pushed.
-// To go LIVE-editable, publish the Google Sheet as CSV and paste its URL here — one line, no rebuild.
-const BASE = "";                         // path prefix to repo root (HE page overrides to "../")
+const BASE = "../";                      // this page lives in /he/ — repo root is one level up
 const CSV_URL = BASE+"data.csv";
 const WA = "972543976983";
-const FX = 3.3, VAT = 1.18;              // calibration knobs: ₪ = USD × FX × VAT. Update FX as the rate drifts.
-const src = u => /^https?:/i.test(u) ? u : BASE+u;   // resolve local img paths from any page depth
+const FX = 3.3, VAT = 1.18;              // ₪ = USD × FX × VAT. Update FX as the rate drifts.
+const src = u => /^https?:/i.test(u) ? u : BASE+u;
+
+/* Hebrew translation of the canonical (English) values stored in the sheet */
+const SHAPE_HE = {Round:"עגול",Oval:"אובל",Cushion:"קושן",Emerald:"אמרלד",Radiant:"רדיאנט",
+  Marquise:"מרקיזה",Triangle:"משולש",Pear:"טיפה",Princess:"פרינסס",Heart:"לב",Asscher:"אשר",Mixed:"משולב"};
+const TYPE_HE = {"Natural Diamond":"יהלום טבעי","Lab Grown Diamond":"יהלום מעבדה"};
+const GOLD_HE = {Yellow:"צהוב",White:"לבן",Rose:"ורוד"};
+const he = (map,v) => map[v] || v;
 
 /* ============ state ============ */
-let ITEMS = [], cur = "usd", filt = "all";
+let ITEMS = [], cur = "ils", filt = "all";
 const $ = id => document.getElementById(id);
 
 /* ============ csv ============ */
@@ -183,14 +187,14 @@ function parseCSV(text){
 
 /* ============ helpers ============ */
 const num = v => { const n=parseFloat(v); return isFinite(n)?n:null; };
-const isSale = it => (it.show||"").toUpperCase()!=="FALSE";      // "for sale" flag
+const isSale = it => (it.show||"").toUpperCase()!=="FALSE";
 const titleOf = it => it.short_title || it.name || it.j_number;
 const imgs = it => (it.images||"").split("|").map(s=>s.trim()).filter(Boolean);
 function detailsLine(it){
   const s=[];
-  if(num(it.carats)) s.push(it.carats+" Carats");
-  if(it.shape) s.push(it.shape);
-  if(it.diamond_type) s.push(it.diamond_type);
+  if(num(it.carats)) s.push(it.carats+" קראט");
+  if(it.shape) s.push(he(SHAPE_HE,it.shape));
+  if(it.diamond_type) s.push(he(TYPE_HE,it.diamond_type));
   return s.join("  |  ");
 }
 function fmt(usd){
@@ -206,24 +210,24 @@ function discount(it){
 /* ============ render ============ */
 function priceInline(it){
   const now=num(it.price_usd);
-  if(now==null) return '<div class="por">Price on request</div>';
+  if(now==null) return '<div class="por">מחיר לפי פנייה</div>';
   const off=discount(it);
   let h='<div class="price">';
-  if(off>0) h+='<span class="off">−'+off+'%</span>';
+  if(off>0) h+='<span class="off">‏−'+off+'%</span>';
   h+='<span class="now">'+fmt(now)+'</span>';
   if(off>0) h+='<span class="was">'+fmt(num(it.was_usd))+'</span>';
   return h+'</div>';
 }
 function render(){
   const list = ITEMS.filter(it=>filt==="all"||it.type===filt);
-  $("count").textContent = list.length+" pieces · one of each";
+  $("count").textContent = list.length+" פריטים · אחד מכל דגם";
   $("grid").innerHTML = list.map(it=>{
     const im=imgs(it), off=discount(it), now=num(it.price_usd);
     const pic = im.length ? '<img src="'+src(im[0])+'" loading="lazy" alt="'+titleOf(it)+'"/>'
-                          : '<div class="noimg">PHOTO<br/>COMING SOON</div>';
+                          : '<div class="noimg">תמונה<br/>בקרוב</div>';
     let badge="";
-    if(now==null) badge='<span class="badge rare">One of a kind</span>';
-    else if(off>0) badge='<span class="badge">−'+off+'%</span>';
+    if(now==null) badge='<span class="badge rare">פריט יחיד</span>';
+    else if(off>0) badge='<span class="badge">‏−'+off+'%</span>';
     return '<div class="card" onclick="openItem(\''+it.j_number+'\')">'+
       '<div class="ph">'+pic+badge+'</div>'+
       '<h3>'+titleOf(it)+'</h3>'+
@@ -235,17 +239,17 @@ function render(){
 /* ============ modal ============ */
 function priceBlock(it){
   const now=num(it.price_usd);
-  if(now==null) return '<div class="pb"><div class="por">Price on request</div>'+
-    '<div class="vat">Message us about this one-of-a-kind piece.</div></div>';
-  const off=discount(it), altCur = cur==="usd"?"ils":"usd";
-  const alt = cur==="usd" ? "₪"+Math.round(now*FX*VAT).toLocaleString("en-US")+" incl. VAT"
-                          : "$"+Math.round(now).toLocaleString("en-US")+" tax-free";
+  if(now==null) return '<div class="pb"><div class="por">מחיר לפי פנייה</div>'+
+    '<div class="vat">כתבו לנו על הפריט היחיד במינו הזה.</div></div>';
+  const off=discount(it);
+  const alt = cur==="ils" ? "$"+Math.round(now).toLocaleString("en-US")+" ללא מע\"מ (משלוח לחו\"ל)"
+                          : "₪"+Math.round(now*FX*VAT).toLocaleString("en-US")+" כולל מע\"מ";
   let h='<div class="pb"><div class="head">';
-  if(off>0) h+='<span class="off">−'+off+'% OFF</span>';
+  if(off>0) h+='<span class="off">‏'+off+'%- הנחה</span>';
   h+='<span class="now">'+fmt(now)+'</span></div>';
-  if(off>0) h+='<div class="was"><s>'+fmt(num(it.was_usd))+'</s><span class="save">You save '+off+'%</span></div>';
+  if(off>0) h+='<div class="was"><s>'+fmt(num(it.was_usd))+'</s><span class="save">חסכת '+off+'%</span></div>';
   h+='<div class="alt">'+alt+'</div>';
-  h+='<div class="vat">USD ships worldwide, tax-free · ILS includes 18% VAT</div></div>';
+  h+='<div class="vat">מחיר בשקל כולל מע"מ 18% · מחיר בדולר למשלוח לחו"ל, ללא מע"מ</div></div>';
   return h;
 }
 function openItem(j){
@@ -255,21 +259,21 @@ function openItem(j){
   const gal = im.length
     ? '<div class="gal"><div class="main"><img id="mainimg" src="'+src(im[0])+'" alt="'+titleOf(it)+'"/></div>'+
       (im.length>1?'<div class="thumbs">'+im.map((s,i)=>'<img src="'+src(s)+'" class="'+(i===0?'on':'')+'" onclick="swap(this,\''+src(s)+'\')"/>').join('')+'</div>':'')+'</div>'
-    : '<div class="gal"><div class="noimg">PHOTOGRAPHY<br/>COMING SOON</div></div>';
+    : '<div class="gal"><div class="noimg">צילום<br/>בקרוב</div></div>';
   let specs='<table class="specs">';
-  if(num(it.carats)) specs+='<tr><td>Total carat weight</td><td>'+it.carats+' ct</td></tr>';
-  if(it.shape) specs+='<tr><td>Main stone</td><td>'+it.shape+(it.diamond_type?' · '+it.diamond_type:'')+'</td></tr>';
-  if(it.karat||it.gold_color) specs+='<tr><td>Metal</td><td>'+[it.karat,it.gold_color,'Gold'].filter(Boolean).join(' ')+'</td></tr>';
-  specs+='<tr><td>Availability</td><td>One in existence · '+it.j_number+'</td></tr></table>';
-  const wa=encodeURIComponent('Hi Diana Rafael — I\'m interested in "'+titleOf(it)+'" ('+it.j_number+') from the archive.');
-  const view = it.site_link ? '<a class="viewlink" target="_blank" href="'+it.site_link+'">View full details on dianarafael.com →</a>' : '';
+  if(num(it.carats)) specs+='<tr><td>משקל קראט כולל</td><td>'+it.carats+' קראט</td></tr>';
+  if(it.shape) specs+='<tr><td>אבן מרכזית</td><td>'+he(SHAPE_HE,it.shape)+(it.diamond_type?' · '+he(TYPE_HE,it.diamond_type):'')+'</td></tr>';
+  if(it.karat||it.gold_color) specs+='<tr><td>מתכת</td><td>'+[it.karat,'זהב',he(GOLD_HE,it.gold_color)].filter(Boolean).join(' ')+'</td></tr>';
+  specs+='<tr><td>זמינות</td><td>פריט יחיד בעולם · '+it.j_number+'</td></tr></table>';
+  const wa=encodeURIComponent('שלום Diana Rafael — מעניין אותי "'+titleOf(it)+'" ('+it.j_number+') ממכירת הארכיון.');
+  const view = it.site_link ? '<a class="viewlink" target="_blank" href="'+it.site_link+'">לפרטים המלאים באתר ←</a>' : '';
   $("sheet").innerHTML='<div class="top">'+gal+'<div class="info">'+
     '<span class="close" onclick="closeM()">×</span>'+
-    '<div class="type">'+(it.type||'')+' · One of a kind</div>'+
+    '<div class="type">'+(it.type||'')+' · פריט יחיד במינו</div>'+
     '<h2>'+titleOf(it)+'</h2>'+
     '<div class="det">'+detailsLine(it)+'</div>'+
     priceBlock(it)+specs+
-    '<a class="cta" target="_blank" href="https://wa.me/'+WA+'?text='+wa+'">Reserve on WhatsApp</a>'+view+
+    '<a class="cta" target="_blank" href="https://wa.me/'+WA+'?text='+wa+'">לשמירה בוואטסאפ</a>'+view+
     '</div></div>';
   $("modal").classList.add("open"); document.body.style.overflow="hidden";
 }
@@ -287,13 +291,12 @@ document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{
 fetch(CSV_URL,{cache:"no-store"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.text(); })
   .then(text=>{
     ITEMS = parseCSV(text).filter(isSale).filter(it=>it.j_number);
-    // sort by clearance price desc (statement pieces first); price-on-request to the end
     ITEMS.sort((a,b)=>(num(b.price_usd)??-1)-(num(a.price_usd)??-1));
     $("state").style.display="none";
     render();
     if(location.hash){ const j=location.hash.slice(1); if(ITEMS.find(x=>x.j_number===j)) openItem(j); }
   })
-  .catch(e=>{ $("state").textContent="Couldn't load the archive ("+e.message+"). Refresh to try again."; });
+  .catch(e=>{ $("state").textContent="לא הצלחנו לטעון את הארכיון ("+e.message+"). רעננו ונסו שוב."; });
 </script>
 </body>
 </html>
