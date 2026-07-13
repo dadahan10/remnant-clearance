@@ -150,7 +150,8 @@ footer a{color:var(--burgundy)}
 <script>
 /* ============ config ============ */
 const BASE = "../";                      // this page lives in /he/ — repo root is one level up
-const CSV_URL = BASE+"data.csv";
+// LIVE source: Google Sheet published-to-web as CSV (edit in the sheet, page updates itself, ~2-5min cache).
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTxLzeMWDKkDwzu1g4h-geR-tnJ5yk970n6Yth4kDnUxE4mLwOl5UBVRi_O0IgC3nHdm-9cISDDB6PO/pub?output=csv";
 const WA = "972543976983";
 const FX = 3.3, VAT = 1.18;              // ₪ = USD × FX × VAT. Update FX as the rate drifts.
 const src = u => /^https?:/i.test(u) ? u : BASE+u;
