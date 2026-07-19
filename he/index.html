@@ -111,6 +111,16 @@ footer{text-align:center;padding:56px 24px;border-top:1px solid var(--line);colo
 footer .serif{font-size:24px;color:var(--ink);display:block;margin-bottom:10px;letter-spacing:.04em}
 footer a{color:var(--burgundy)}
 </style>
+<!-- analytics: GA4 + Meta pixel. Page-level events fire from track() in the script below. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5LBZYGG5Y5"></script>
+<script>
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}
+gtag('js',new Date());gtag('config','G-5LBZYGG5Y5');
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;
+s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','2081674999428650');fbq('track','PageView');
+</script>
 </head>
 <body>
 
@@ -226,6 +236,20 @@ function discount(it){
   return (now!=null && was!=null && was>now) ? Math.round((was-now)/was*100) : 0;
 }
 
+
+/* ============ tracking ============ */
+// Three audiences, not one: visited the page, opened a piece, tapped through to WhatsApp.
+// Value is always the USD price so numbers stay comparable across the EN and HE pages.
+function track(event, it){
+  const v = it ? (parseFloat(it.price_usd) || 0) : 0;
+  const name = it ? (it.short_title || it.name || it.j_number) : '';
+  try{
+    if(window.fbq) fbq('track', event==='view_item' ? 'ViewContent' : 'Lead',
+      it ? {content_name:name, content_ids:[it.j_number], content_type:'product', value:v, currency:'USD'} : {});
+    if(window.gtag) gtag('event', event, it ? {item_id:it.j_number, item_name:name, value:v, currency:'USD'} : {});
+  }catch(e){}
+}
+
 /* ============ render ============ */
 function priceInline(it){
   const now=num(it.price_usd);
@@ -271,6 +295,7 @@ function priceBlock(it){
 function openItem(j){
   const it=ITEMS.find(x=>x.j_number===j); if(!it) return;
   location.hash=j;
+  track('view_item', it);
   const im=imgs(it);
   const gal = im.length
     ? '<div class="gal"><div class="main"><img id="mainimg" src="'+src(im[0])+'" alt="'+titleOf(it)+'"/></div>'+
@@ -293,6 +318,8 @@ function openItem(j){
     priceBlock(it)+specs+
     '<a class="cta" target="_blank" href="https://wa.me/'+WA+'?text='+wa+'">לפנייה בוואטסאפ</a>'+view+
     '</div></div>';
+  const ctaEl = $("sheet").querySelector(".cta");
+  if(ctaEl) ctaEl.addEventListener("click", () => track("generate_lead", it));
   $("modal").classList.add("open"); document.body.style.overflow="hidden";
 }
 function swap(el,src){ $("mainimg").src=src; document.querySelectorAll('.thumbs img').forEach(t=>t.classList.remove('on')); el.classList.add('on'); }
