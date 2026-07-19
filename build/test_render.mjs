@@ -34,7 +34,9 @@ cur = 'usd'; assert.equal(priceIn(p, 'now'), '$' + Math.round(+p.price_usd).toLo
 cur = 'ils'; assert.equal(priceIn(p, 'now'), '₪' + Math.round(+p.price_usd * FX * VAT).toLocaleString('en-US'))
 
 // 5. a manual ₪ overrides the computed one AND scales "was" so the % still holds
-const manual = { ...p, 'PRice ILS': '29200' }
+// strip whatever the sheet already holds so the injected override is the only one
+const bare = Object.fromEntries(Object.entries(p).filter(([k]) => !/price\s*ils/i.test(k)))
+const manual = { ...bare, 'PRice ILS': '29200' }
 cur = 'ils'
 assert.equal(priceIn(manual, 'now'), '₪29,200', 'manual ₪ must win')
 const was = +priceIn(manual, 'was').replace(/[₪,]/g, '')
@@ -42,7 +44,13 @@ assert.equal(Math.round((was - 29200) / was * 100), discount(p), 'discount % mus
 
 // 6. loose header lookup tolerates however the header gets hand-typed
 for (const h of ['PRice ILS', 'price_ils', 'Price ILS', 'priceils', 'PRICE-ILS'])
-  assert.equal(col({ ...p, [h]: '29200' }, 'priceils'), '29200', 'header spelling not tolerated: ' + h)
-assert.equal(col(p, 'size'), '', 'missing column reads as empty, not undefined')
+  assert.equal(col({ ...bare, [h]: '29200' }, 'priceils'), '29200', 'header spelling not tolerated: ' + h)
+assert.equal(col(p, 'nosuchcolumn'), '', 'missing column reads as empty, not undefined')
+
+// 7. the three columns Daniel added in the sheet are actually reachable by the page
+for (const [header, lookup] of [['Size', 'size'], ['Price ILS', 'priceils'], ['NOtes', 'notes']]) {
+  assert.ok(Object.keys(rows[0]).includes(header), `sheet column "${header}" is missing`)
+  assert.equal(col({ ...rows[0], [header]: 'x' }, lookup), 'x', `"${header}" not reachable as ${lookup}`)
+}
 
 console.log(`ok — ${rows.length} rows, ${rows.filter(r => (r.show || '').toUpperCase() !== 'FALSE').length} shown, J286 photos: ${imgs(j286).length}`)
