@@ -28,14 +28,14 @@ assert.ok(rows.every(r => !('' in r)), 'unnamed spill column must be folded away
 // 3. pipe-separated images still work
 assert.ok(imgs(byJ('J1122') || rows.find(r => (r.images || '').includes('|'))).length > 1, 'pipe-separated still splits')
 
-// 4. price: USD unchanged, ILS derived, discount % consistent across currencies
+// 4. price: USD unchanged, ILS derived from USD when the sheet has no manual override.
+// Daniel fills "Price ILS" as he goes, so strip it here — this case is the fallback path.
 const p = rows.find(r => r.price_usd && r.was_usd && discount(r) > 0)
-cur = 'usd'; assert.equal(priceIn(p, 'now'), '$' + Math.round(+p.price_usd).toLocaleString('en-US'))
-cur = 'ils'; assert.equal(priceIn(p, 'now'), '₪' + Math.round(+p.price_usd * FX * VAT).toLocaleString('en-US'))
+const bare = Object.fromEntries(Object.entries(p).filter(([k]) => !/price\s*ils/i.test(k)))
+cur = 'usd'; assert.equal(priceIn(bare, 'now'), '$' + Math.round(+p.price_usd).toLocaleString('en-US'))
+cur = 'ils'; assert.equal(priceIn(bare, 'now'), '₪' + Math.round(+p.price_usd * FX * VAT).toLocaleString('en-US'))
 
 // 5. a manual ₪ overrides the computed one AND scales "was" so the % still holds
-// strip whatever the sheet already holds so the injected override is the only one
-const bare = Object.fromEntries(Object.entries(p).filter(([k]) => !/price\s*ils/i.test(k)))
 const manual = { ...bare, 'PRice ILS': '29200' }
 cur = 'ils'
 assert.equal(priceIn(manual, 'now'), '₪29,200', 'manual ₪ must win')

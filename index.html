@@ -160,7 +160,10 @@ const FX = 3.3, VAT = 1.18;              // calibration knobs: ₪ = USD × FX �
 const src = u => /^https?:/i.test(u) ? u : BASE+u;   // resolve local img paths from any page depth
 
 /* ============ state ============ */
-let ITEMS = [], cur = "usd", filt = "all";
+// ?c=usd / ?c=ils overrides the page's default currency, so the same page gives a
+// shareable link per currency. Anything else falls back to the default.
+const qc = new URLSearchParams(location.search).get("c");
+let ITEMS = [], cur = (qc==="usd"||qc==="ils") ? qc : "usd", filt = "all";
 const $ = id => document.getElementById(id);
 
 /* ============ csv ============ */
@@ -293,7 +296,7 @@ function openItem(j){
   $("modal").classList.add("open"); document.body.style.overflow="hidden";
 }
 function swap(el,src){ $("mainimg").src=src; document.querySelectorAll('.thumbs img').forEach(t=>t.classList.remove('on')); el.classList.add('on'); }
-function closeM(){ $("modal").classList.remove("open"); document.body.style.overflow=""; history.replaceState(null,"",location.pathname); }
+function closeM(){ $("modal").classList.remove("open"); document.body.style.overflow=""; history.replaceState(null,"",location.pathname+location.search); }
 
 /* ============ wiring ============ */
 $("modal").onclick=e=>{ if(e.target.id==="modal") closeM(); };
@@ -301,6 +304,8 @@ document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('[data-f]').forEach(x=>x.classList.remove('on')); b.classList.add('on'); filt=b.dataset.f; render(); });
 document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('[data-c]').forEach(x=>x.classList.remove('on')); b.classList.add('on'); cur=b.dataset.c; render(); });
+// highlight whichever currency ?c= selected, not the one hardcoded in the markup
+document.querySelectorAll('[data-c]').forEach(b=>b.classList.toggle('on', b.dataset.c===cur));
 
 /* ============ load ============ */
 fetch(CSV_URL,{cache:"no-store"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.text(); })
