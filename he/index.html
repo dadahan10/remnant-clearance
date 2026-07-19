@@ -99,6 +99,7 @@ a{color:inherit}
 .specs{width:100%;border-collapse:collapse;font-size:14.5px}
 .specs td{padding:9px 0;border-bottom:1px solid var(--line);vertical-align:top}
 .specs td:first-child{color:var(--muted);width:40%}
+.itemnote{margin-top:14px;padding:12px 14px;background:#faf6f2;border-inline-start:2px solid var(--gold);font-size:14.5px;line-height:1.7;color:var(--muted)}
 .cta{display:block;text-align:center;background:var(--ink);color:var(--cream);text-decoration:none;padding:16px;border-radius:9px;margin-top:22px;font-weight:600;letter-spacing:.02em;transition:.2s}
 .cta:hover{background:var(--burgundy)}
 .viewlink{display:block;text-align:center;margin-top:12px;font-size:13.5px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
@@ -182,15 +183,24 @@ function parseCSV(text){
   if(field.length||row.length){ row.push(field); rows.push(row); }
   const head = rows.shift().map(h=>h.trim());
   return rows.filter(r=>r.some(x=>x!=="")).map(r=>{
-    const o={}; head.forEach((h,i)=>o[h]=(r[i]||"").trim()); return o;
+    // Image URLs pasted comma-separated (instead of |) push the row past the named columns.
+    // Everything that lands in an unnamed or overflow cell is folded back into images,
+    // otherwise those extra photos are silently dropped.
+    const o={}, spill=[];
+    head.forEach((h,i)=>{ const v=(r[i]||"").trim(); if(h) o[h]=v; else if(v) spill.push(v); });
+    spill.push(...r.slice(head.length).map(s=>(s||"").trim()).filter(Boolean));
+    if(spill.length) o.images = [o.images, ...spill].filter(Boolean).join("|");
+    return o;
   });
 }
 
 /* ============ helpers ============ */
 const num = v => { const n=parseFloat(v); return isFinite(n)?n:null; };
+// Sheet headers are hand-typed and drift in case/spacing ("PRice ILS"), so match loosely.
+const col = (it,name) => { const k=Object.keys(it).find(k=>k.toLowerCase().replace(/\s+/g,"")===name); return k?it[k]:""; };
 const isSale = it => (it.show||"").toUpperCase()!=="FALSE";
 const titleOf = it => it.short_title || it.name || it.j_number;
-const imgs = it => (it.images||"").split("|").map(s=>s.trim()).filter(Boolean);
+const imgs = it => (it.images||"").split(/[|,]/).map(s=>s.trim()).filter(Boolean);
 function detailsLine(it){
   const s=[];
   if(num(it.carats)) s.push(it.carats+" קראט");
@@ -198,10 +208,15 @@ function detailsLine(it){
   if(it.diamond_type) s.push(he(TYPE_HE,it.diamond_type));
   return s.join("  |  ");
 }
-function fmt(usd){
+// מחיר במטבע הנבחר. ₪ ידני מהגיליון גובר; מחיר "היה" מוצמד לאותו יחס כדי שאחוז ההנחה יישאר נכון.
+function priceIn(it, which, c){
+  c = c || cur;
+  const usd = num(which==="was" ? it.was_usd : it.price_usd);
   if(usd==null) return null;
-  return cur==="usd" ? "$"+Math.round(usd).toLocaleString("en-US")
-                     : "₪"+Math.round(usd*FX*VAT).toLocaleString("en-US");
+  if(c==="usd") return "$"+Math.round(usd).toLocaleString("en-US");
+  const manual = num(col(it,"priceils")), base = num(it.price_usd);
+  const ils = (manual!=null && base) ? Math.round(manual*usd/base) : Math.round(usd*FX*VAT);
+  return "₪"+ils.toLocaleString("en-US");
 }
 function discount(it){
   const now=num(it.price_usd), was=num(it.was_usd);
@@ -215,8 +230,8 @@ function priceInline(it){
   const off=discount(it);
   let h='<div class="price">';
   if(off>0) h+='<span class="off">‏−'+off+'%</span>';
-  h+='<span class="now">'+fmt(now)+'</span>';
-  if(off>0) h+='<span class="was">'+fmt(num(it.was_usd))+'</span>';
+  h+='<span class="now">'+priceIn(it,"now")+'</span>';
+  if(off>0) h+='<span class="was">'+priceIn(it,"was")+'</span>';
   return h+'</div>';
 }
 function render(){
@@ -243,12 +258,12 @@ function priceBlock(it){
   if(now==null) return '<div class="pb"><div class="por">מחיר לפי פנייה</div>'+
     '<div class="vat">כתבו לנו על הפריט היחיד במינו הזה.</div></div>';
   const off=discount(it);
-  const alt = cur==="ils" ? "$"+Math.round(now).toLocaleString("en-US")+" ללא מע\"מ (משלוח לחו\"ל)"
-                          : "₪"+Math.round(now*FX*VAT).toLocaleString("en-US")+" כולל מע\"מ";
+  const alt = cur==="ils" ? priceIn(it,"now","usd")+" ללא מע\"מ (משלוח לחו\"ל)"
+                          : priceIn(it,"now","ils")+" כולל מע\"מ";
   let h='<div class="pb"><div class="head">';
   if(off>0) h+='<span class="off">‏'+off+'%- הנחה</span>';
-  h+='<span class="now">'+fmt(now)+'</span></div>';
-  if(off>0) h+='<div class="was"><s>'+fmt(num(it.was_usd))+'</s><span class="save">חסכת '+off+'%</span></div>';
+  h+='<span class="now">'+priceIn(it,"now")+'</span></div>';
+  if(off>0) h+='<div class="was"><s>'+priceIn(it,"was")+'</s><span class="save">חסכת '+off+'%</span></div>';
   h+='<div class="alt">'+alt+'</div>';
   h+='<div class="vat">מחיר בשקל כולל מע"מ 18% · מחיר בדולר למשלוח לחו"ל, ללא מע"מ</div></div>';
   return h;
@@ -265,7 +280,9 @@ function openItem(j){
   if(num(it.carats)) specs+='<tr><td>משקל קראט כולל</td><td>'+it.carats+' קראט</td></tr>';
   if(it.shape) specs+='<tr><td>אבן מרכזית</td><td>'+he(SHAPE_HE,it.shape)+(it.diamond_type?' · '+he(TYPE_HE,it.diamond_type):'')+'</td></tr>';
   if(it.karat||it.gold_color) specs+='<tr><td>מתכת</td><td>'+[it.karat,'זהב',he(GOLD_HE,it.gold_color)].filter(Boolean).join(' ')+'</td></tr>';
+  if(col(it,"size")) specs+='<tr><td>מידה</td><td>'+col(it,"size")+'</td></tr>';
   specs+='<tr><td>זמינות</td><td>פריט יחיד בעולם · '+it.j_number+'</td></tr></table>';
+  if(col(it,"notes")) specs+='<div class="itemnote">'+col(it,"notes")+'</div>';
   const wa=encodeURIComponent('שלום Diana Rafael — מעניין אותי "'+titleOf(it)+'" ('+it.j_number+') ממכירת הארכיון.');
   const view = it.site_link ? '<a class="viewlink" target="_blank" href="'+it.site_link+'">לפרטים המלאים באתר ←</a>' : '';
   $("sheet").innerHTML='<div class="top">'+gal+'<div class="info">'+
