@@ -40,8 +40,9 @@ assert.equal(priceIn(manual, 'now'), '₪29,200', 'manual ₪ must win')
 const was = +priceIn(manual, 'was').replace(/[₪,]/g, '')
 assert.equal(Math.round((was - 29200) / was * 100), discount(p), 'discount % must survive the manual override')
 
-// 6. loose header lookup tolerates the hand-typed "PRice ILS"
-assert.equal(col(manual, 'priceils'), '29200')
+// 6. loose header lookup tolerates however the header gets hand-typed
+for (const h of ['PRice ILS', 'price_ils', 'Price ILS', 'priceils', 'PRICE-ILS'])
+  assert.equal(col({ ...p, [h]: '29200' }, 'priceils'), '29200', 'header spelling not tolerated: ' + h)
 assert.equal(col(p, 'size'), '', 'missing column reads as empty, not undefined')
 
 console.log(`ok — ${rows.length} rows, ${rows.filter(r => (r.show || '').toUpperCase() !== 'FALSE').length} shown, J286 photos: ${imgs(j286).length}`)

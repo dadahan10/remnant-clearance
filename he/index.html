@@ -196,8 +196,9 @@ function parseCSV(text){
 
 /* ============ helpers ============ */
 const num = v => { const n=parseFloat(v); return isFinite(n)?n:null; };
-// Sheet headers are hand-typed and drift in case/spacing ("PRice ILS"), so match loosely.
-const col = (it,name) => { const k=Object.keys(it).find(k=>k.toLowerCase().replace(/\s+/g,"")===name); return k?it[k]:""; };
+// Sheet headers are hand-typed and drift in case/spacing/underscores ("PRice ILS", "price_ils"), so match loosely.
+const key = s => (s||"").toLowerCase().replace(/[\s_-]+/g,"");
+const col = (it,name) => { const k=Object.keys(it).find(k=>key(k)===name); return k?it[k]:""; };
 const isSale = it => (it.show||"").toUpperCase()!=="FALSE";
 const titleOf = it => it.short_title || it.name || it.j_number;
 const imgs = it => (it.images||"").split(/[|,]/).map(s=>s.trim()).filter(Boolean);
