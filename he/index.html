@@ -126,12 +126,7 @@ footer a{color:var(--burgundy)}
   <button class="chip on" data-f="all">הכל</button>
   <button class="chip" data-f="Ring">טבעות</button>
   <button class="chip" data-f="Earrings">עגילים</button>
-  <button class="chip" data-f="Pendant">תליונים</button>
-  <button class="chip" data-f="Bracelet">צמידים</button>
-  <span class="cur">
-    <button class="chip on" data-c="ils">₪ שקל</button>
-    <button class="chip" data-c="usd">$ דולר</button>
-  </span>
+  <button class="chip" data-f="Pendant">שרשראות טניס</button>
 </div></div>
 
 <div class="wrap">
@@ -167,8 +162,8 @@ const he = (map,v) => map[v] || v;
 /* ============ state ============ */
 // ?c=usd / ?c=ils overrides the page's default currency, so the same page gives a
 // shareable link per currency. Anything else falls back to the default.
-const qc = new URLSearchParams(location.search).get("c");
-let ITEMS = [], cur = (qc==="usd"||qc==="ils") ? qc : "ils", filt = "all";
+// The Hebrew page is shekels only — no USD anywhere, and no currency toggle.
+let ITEMS = [], cur = "ils", filt = "all";
 const $ = id => document.getElementById(id);
 
 /* ============ csv ============ */
@@ -246,7 +241,7 @@ function render(){
     const pic = im.length ? '<img src="'+src(im[0])+'" loading="lazy" alt="'+titleOf(it)+'"/>'
                           : '<div class="noimg">תמונה<br/>בקרוב</div>';
     let badge="";
-    if(now==null) badge='<span class="badge rare">פריט יחיד</span>';
+    if(now==null) badge='<span class="badge rare">רק אחד במלאי</span>';
     else if(off>0) badge='<span class="badge">‏−'+off+'%</span>';
     return '<div class="card" onclick="openItem(\''+it.j_number+'\')">'+
       '<div class="ph">'+pic+badge+'</div>'+
@@ -262,14 +257,11 @@ function priceBlock(it){
   if(now==null) return '<div class="pb"><div class="por">מחיר לפי פנייה</div>'+
     '<div class="vat">כתבו לנו על הפריט היחיד במינו הזה.</div></div>';
   const off=discount(it);
-  const alt = cur==="ils" ? priceIn(it,"now","usd")+" ללא מע\"מ (משלוח לחו\"ל)"
-                          : priceIn(it,"now","ils")+" כולל מע\"מ";
   let h='<div class="pb"><div class="head">';
   if(off>0) h+='<span class="off">‏'+off+'%- הנחה</span>';
   h+='<span class="now">'+priceIn(it,"now")+'</span></div>';
   if(off>0) h+='<div class="was"><s>'+priceIn(it,"was")+'</s><span class="save">חסכת '+off+'%</span></div>';
-  h+='<div class="alt">'+alt+'</div>';
-  h+='<div class="vat">מחיר בשקל כולל מע"מ 18% · מחיר בדולר למשלוח לחו"ל, ללא מע"מ</div></div>';
+  h+='<div class="vat">המחיר כולל מע"מ 18%</div></div>';
   return h;
 }
 function openItem(j){
@@ -285,7 +277,7 @@ function openItem(j){
   if(it.shape) specs+='<tr><td>אבן מרכזית</td><td>'+he(SHAPE_HE,it.shape)+(it.diamond_type?' · '+he(TYPE_HE,it.diamond_type):'')+'</td></tr>';
   if(it.karat||it.gold_color) specs+='<tr><td>מתכת</td><td>'+[it.karat,'זהב',he(GOLD_HE,it.gold_color)].filter(Boolean).join(' ')+'</td></tr>';
   if(col(it,"size")) specs+='<tr><td>מידה</td><td>'+col(it,"size")+'</td></tr>';
-  specs+='<tr><td>זמינות</td><td>פריט יחיד בעולם · '+it.j_number+'</td></tr></table>';
+  specs+='<tr><td>זמינות</td><td>רק אחד במלאי · '+it.j_number+'</td></tr></table>';
   if(col(it,"notes")) specs+='<div class="itemnote">'+col(it,"notes")+'</div>';
   const wa=encodeURIComponent('שלום Diana Rafael — מעניין אותי "'+titleOf(it)+'" ('+it.j_number+') ממכירת הארכיון.');
   const view = it.site_link ? '<a class="viewlink" target="_blank" href="'+it.site_link+'">לפרטים המלאים באתר ←</a>' : '';
@@ -295,7 +287,7 @@ function openItem(j){
     '<h2>'+titleOf(it)+'</h2>'+
     '<div class="det">'+detailsLine(it)+'</div>'+
     priceBlock(it)+specs+
-    '<a class="cta" target="_blank" href="https://wa.me/'+WA+'?text='+wa+'">לשמירה בוואטסאפ</a>'+view+
+    '<a class="cta" target="_blank" href="https://wa.me/'+WA+'?text='+wa+'">לפנייה בוואטסאפ</a>'+view+
     '</div></div>';
   $("modal").classList.add("open"); document.body.style.overflow="hidden";
 }
@@ -306,10 +298,6 @@ function closeM(){ $("modal").classList.remove("open"); document.body.style.over
 $("modal").onclick=e=>{ if(e.target.id==="modal") closeM(); };
 document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('[data-f]').forEach(x=>x.classList.remove('on')); b.classList.add('on'); filt=b.dataset.f; render(); });
-document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('[data-c]').forEach(x=>x.classList.remove('on')); b.classList.add('on'); cur=b.dataset.c; render(); });
-// highlight whichever currency ?c= selected, not the one hardcoded in the markup
-document.querySelectorAll('[data-c]').forEach(b=>b.classList.toggle('on', b.dataset.c===cur));
 
 /* ============ load ============ */
 fetch(CSV_URL,{cache:"no-store"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.text(); })

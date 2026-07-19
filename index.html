@@ -127,8 +127,7 @@ footer a{color:var(--burgundy)}
   <button class="chip on" data-f="all">All</button>
   <button class="chip" data-f="Ring">Rings</button>
   <button class="chip" data-f="Earrings">Earrings</button>
-  <button class="chip" data-f="Pendant">Pendants</button>
-  <button class="chip" data-f="Bracelet">Bracelets</button>
+  <button class="chip" data-f="Pendant">Tennis Necklaces</button>
   <span class="cur">
     <button class="chip on" data-c="usd">$ USD</button>
     <button class="chip" data-c="ils">₪ ILS</button>
@@ -242,7 +241,7 @@ function render(){
     const pic = im.length ? '<img src="'+src(im[0])+'" loading="lazy" alt="'+titleOf(it)+'"/>'
                           : '<div class="noimg">PHOTO<br/>COMING SOON</div>';
     let badge="";
-    if(now==null) badge='<span class="badge rare">One of a kind</span>';
+    if(now==null) badge='<span class="badge rare">Only one in stock</span>';
     else if(off>0) badge='<span class="badge">−'+off+'%</span>';
     return '<div class="card" onclick="openItem(\''+it.j_number+'\')">'+
       '<div class="ph">'+pic+badge+'</div>'+
@@ -281,7 +280,7 @@ function openItem(j){
   if(it.shape) specs+='<tr><td>Main stone</td><td>'+it.shape+(it.diamond_type?' · '+it.diamond_type:'')+'</td></tr>';
   if(it.karat||it.gold_color) specs+='<tr><td>Metal</td><td>'+[it.karat,it.gold_color,'Gold'].filter(Boolean).join(' ')+'</td></tr>';
   if(col(it,"size")) specs+='<tr><td>Size</td><td>'+col(it,"size")+'</td></tr>';
-  specs+='<tr><td>Availability</td><td>One in existence · '+it.j_number+'</td></tr></table>';
+  specs+='<tr><td>Availability</td><td>Only one in stock · '+it.j_number+'</td></tr></table>';
   if(col(it,"notes")) specs+='<div class="itemnote">'+col(it,"notes")+'</div>';
   const wa=encodeURIComponent('Hi Diana Rafael — I\'m interested in "'+titleOf(it)+'" ('+it.j_number+') from the archive.');
   const view = it.site_link ? '<a class="viewlink" target="_blank" href="'+it.site_link+'">View full details on dianarafael.com →</a>' : '';
