@@ -307,7 +307,8 @@ document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{
 fetch(CSV_URL,{cache:"no-store"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.text(); })
   .then(text=>{
     ITEMS = parseCSV(text).filter(isSale).filter(it=>it.j_number);
-    ITEMS.sort((a,b)=>(num(b.price_usd)??-1)-(num(a.price_usd)??-1));
+    // מיון לפי מחיר החיסול מהזול ליקר; "מחיר לפי פנייה" בסוף
+    ITEMS.sort((a,b)=>(num(a.price_usd)??Infinity)-(num(b.price_usd)??Infinity));
     $("state").style.display="none";
     render();
     if(location.hash){ const j=location.hash.slice(1); if(ITEMS.find(x=>x.j_number===j)) openItem(j); }
