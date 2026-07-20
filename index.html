@@ -250,6 +250,13 @@ function track(event, it){
   }catch(e){}
 }
 
+// The footer WhatsApp link is a real way out of the page, so it counts as a lead too.
+// Scoped to <footer> on purpose: the in-item .cta has its own listener and a document-wide
+// delegate would count that click twice.
+document.querySelectorAll('footer a[href*="wa.me"]').forEach(function(a){
+  a.addEventListener('click', function(){ track('generate_lead', null); });
+});
+
 /* ============ render ============ */
 function priceInline(it){
   const now=num(it.price_usd);

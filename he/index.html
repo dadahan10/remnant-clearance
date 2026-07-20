@@ -250,6 +250,13 @@ function track(event, it){
   }catch(e){}
 }
 
+// הקישור לוואטסאפ בפוטר הוא יציאה אמיתית מהדף, ולכן נספר גם הוא כליד.
+// מוגבל ל-<footer> בכוונה: ל-.cta שבתוך פריט יש מאזין משלו, ודלגציה על כל המסמך
+// הייתה סופרת את אותה לחיצה פעמיים.
+document.querySelectorAll('footer a[href*="wa.me"]').forEach(function(a){
+  a.addEventListener('click', function(){ track('generate_lead', null); });
+});
+
 /* ============ render ============ */
 function priceInline(it){
   const now=num(it.price_usd);
