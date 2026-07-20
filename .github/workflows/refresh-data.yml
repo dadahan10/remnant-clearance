@@ -1,0 +1,41 @@
+name: Refresh data.csv from Google Sheet
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch, validate, and update
+        env:
+          CSV_URL: https://docs.google.com/spreadsheets/d/e/2PACX-1vTxLzeMWDKkDwzu1g4h-geR-tnJ5yk970n6Yth4kDnUxE4mLwOl5UBVRi_O0IgC3nHdm-9cISDDB6PO/pub?output=csv
+        run: |
+          set -euo pipefail
+          curl -fsSL --max-time 60 --retry 3 --retry-delay 5 "$CSV_URL" -o fresh.csv
+          # Schema guard — reject anything that isn't the sheet.
+          head -1 fresh.csv | grep -q '^j_number,show,short_title,name,type,carats' || { echo "header mismatch"; exit 1; }
+          lines=$(wc -l < fresh.csv)
+          [ "$lines" -ge 15 ] || { echo "too few rows ($lines)"; exit 1; }
+          if cmp -s fresh.csv data.csv; then
+            echo "no change ($lines lines)"
+            rm fresh.csv
+            exit 0
+          fi
+          mv fresh.csv data.csv
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data.csv
+          git commit -m "chore(data): refresh from sheet ($lines lines)"
+          git push
