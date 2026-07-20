@@ -100,6 +100,7 @@ a{color:inherit}
 .specs td{padding:9px 0;border-bottom:1px solid var(--line);vertical-align:top}
 .specs td:first-child{color:var(--muted);width:40%}
 .itemnote{margin-top:14px;padding:12px 14px;background:#faf6f2;border-inline-start:2px solid var(--gold);font-size:14px;line-height:1.6;color:var(--muted)}
+.sizewarn{display:block;margin-top:5px;font-size:12.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--burgundy)}
 .cta{display:block;text-align:center;background:var(--ink);color:var(--cream);text-decoration:none;padding:16px;border-radius:9px;margin-top:22px;font-weight:600;letter-spacing:.03em;transition:.2s}
 .cta:hover{background:var(--burgundy)}
 .viewlink{display:block;text-align:center;margin-top:12px;font-size:13px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
@@ -258,6 +259,17 @@ document.querySelectorAll('footer a[href*="wa.me"]').forEach(function(a){
 });
 
 /* ============ render ============ */
+// Column O carries a sizing limit on a few pieces ("Not Rssizable!", "Sizeable to only
+// 6 US!"). On a one-of-a-kind ring that limit decides whether it fits at all, so it is
+// shown against the size itself — and in our wording, not the sheet's spelling.
+function sizeLimit(it){
+  const raw=(col(it,"notes")||'').trim();
+  if(!/siz/i.test(raw)) return null;                 // e.g. "Single Earring" is not a size note
+  if(/\bnot\b/i.test(raw)) return 'Cannot be resized';
+  const m=raw.match(/(\d+(?:\.\d+)?)/);
+  return m ? 'Can be resized up to '+m[1]+' only' : 'Limited resizing';
+}
+
 function priceInline(it){
   const now=num(it.price_usd);
   if(now==null) return '<div class="por">Price on request</div>';
@@ -315,9 +327,13 @@ function openItem(j){
   if(num(it.carats)) specs+='<tr><td>Total carat weight</td><td>'+it.carats+' ct</td></tr>';
   if(it.shape) specs+='<tr><td>Main stone</td><td>'+it.shape+(it.diamond_type?' · '+it.diamond_type:'')+'</td></tr>';
   if(it.karat||it.gold_color) specs+='<tr><td>Metal</td><td>'+[it.karat,it.gold_color,'Gold'].filter(Boolean).join(' ')+'</td></tr>';
-  if(col(it,"size")) specs+='<tr><td>Size</td><td>'+col(it,"size")+'</td></tr>';
+  if(col(it,"size")){
+    const lim=sizeLimit(it);
+    specs+='<tr><td>Size</td><td>'+col(it,"size")+(lim?'<span class="sizewarn">'+lim+'</span>':'')+'</td></tr>';
+  }
   specs+='<tr><td>Availability</td><td>Only one in stock · '+it.j_number+'</td></tr></table>';
-  if(col(it,"notes")) specs+='<div class="itemnote">'+col(it,"notes")+'</div>';
+  // A sizing limit already rides on the Size row — don't repeat it in the note box.
+  if(col(it,"notes") && !sizeLimit(it)) specs+='<div class="itemnote">'+col(it,"notes")+'</div>';
   const wa=encodeURIComponent('Hi Diana Rafael — I\'m interested in "'+titleOf(it)+'" ('+it.j_number+') from the archive.');
   const view = it.site_link ? '<a class="viewlink" target="_blank" href="'+it.site_link+'">View full details on dianarafael.com →</a>' : '';
   $("sheet").innerHTML='<div class="top">'+gal+'<div class="info">'+

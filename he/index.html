@@ -100,6 +100,7 @@ a{color:inherit}
 .specs td{padding:9px 0;border-bottom:1px solid var(--line);vertical-align:top}
 .specs td:first-child{color:var(--muted);width:40%}
 .itemnote{margin-top:14px;padding:12px 14px;background:#faf6f2;border-inline-start:2px solid var(--gold);font-size:14.5px;line-height:1.7;color:var(--muted)}
+.sizewarn{display:block;margin-top:5px;font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--burgundy)}
 .cta{display:block;text-align:center;background:var(--ink);color:var(--cream);text-decoration:none;padding:16px;border-radius:9px;margin-top:22px;font-weight:600;letter-spacing:.02em;transition:.2s}
 .cta:hover{background:var(--burgundy)}
 .viewlink{display:block;text-align:center;margin-top:12px;font-size:13.5px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
@@ -258,6 +259,17 @@ document.querySelectorAll('footer a[href*="wa.me"]').forEach(function(a){
 });
 
 /* ============ render ============ */
+// עמודה O נושאת מגבלת מידה בכמה פריטים ("Not Rssizable!", "Sizeable to only 6 US!").
+// בטבעת יחידה המגבלה הזו קובעת אם היא בכלל מתאימה, ולכן היא מוצגת צמוד למידה עצמה —
+// ובניסוח שלנו, לא בכתיב של הגיליון.
+function sizeLimit(it){
+  const raw=(col(it,"notes")||'').trim();
+  if(!/siz/i.test(raw)) return null;                 // "Single Earring" אינה הערת מידה
+  if(/\bnot\b/i.test(raw)) return 'לא ניתנת לשינוי מידה';
+  const m=raw.match(/(\d+(?:\.\d+)?)/);
+  return m ? 'ניתנת להגדלה עד מידה '+m[1]+' בלבד' : 'שינוי מידה מוגבל';
+}
+
 function priceInline(it){
   const now=num(it.price_usd);
   if(now==null) return '<div class="por">מחיר לפי פנייה</div>';
@@ -312,9 +324,13 @@ function openItem(j){
   if(num(it.carats)) specs+='<tr><td>משקל קראט כולל</td><td>'+it.carats+' קראט</td></tr>';
   if(it.shape) specs+='<tr><td>אבן מרכזית</td><td>'+he(SHAPE_HE,it.shape)+(it.diamond_type?' · '+he(TYPE_HE,it.diamond_type):'')+'</td></tr>';
   if(it.karat||it.gold_color) specs+='<tr><td>מתכת</td><td>'+[it.karat,'זהב',he(GOLD_HE,it.gold_color)].filter(Boolean).join(' ')+'</td></tr>';
-  if(col(it,"size")) specs+='<tr><td>מידה</td><td>'+col(it,"size")+'</td></tr>';
+  if(col(it,"size")){
+    const lim=sizeLimit(it);
+    specs+='<tr><td>מידה</td><td>'+col(it,"size")+(lim?'<span class="sizewarn">'+lim+'</span>':'')+'</td></tr>';
+  }
   specs+='<tr><td>זמינות</td><td>רק אחד במלאי · '+it.j_number+'</td></tr></table>';
-  if(col(it,"notes")) specs+='<div class="itemnote">'+col(it,"notes")+'</div>';
+  // מגבלת מידה כבר מוצגת על שורת המידה — לא לחזור עליה בתיבת ההערה.
+  if(col(it,"notes") && !sizeLimit(it)) specs+='<div class="itemnote">'+col(it,"notes")+'</div>';
   const wa=encodeURIComponent('שלום Diana Rafael — מעניין אותי "'+titleOf(it)+'" ('+it.j_number+') ממכירת הארכיון.');
   const view = it.site_link ? '<a class="viewlink" target="_blank" href="'+it.site_link+'">לפרטים המלאים באתר ←</a>' : '';
   $("sheet").innerHTML='<div class="top">'+gal+'<div class="info">'+
