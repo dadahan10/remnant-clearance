@@ -356,16 +356,31 @@ document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('[data-f]').forEach(x=>x.classList.remove('on')); b.classList.add('on'); filt=b.dataset.f; render(); });
 
 /* ============ load ============ */
-fetch(CSV_URL,{cache:"no-store"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.text(); })
-  .then(text=>{
-    ITEMS = parseCSV(text).filter(isSale).filter(it=>it.j_number);
-    // מיון לפי מחיר החיסול מהזול ליקר; "מחיר לפי פנייה" בסוף
-    ITEMS.sort((a,b)=>(num(a.price_usd)??Infinity)-(num(b.price_usd)??Infinity));
-    $("state").style.display="none";
-    render();
-    if(location.hash){ const j=location.hash.slice(1); if(ITEMS.find(x=>x.j_number===j)) openItem(j); }
-  })
-  .catch(e=>{ $("state").textContent="לא הצלחנו לטעון את הארכיון ("+e.message+"). רעננו ונסו שוב."; });
+// קודם תמונת מצב מקומית, אחר כך הגיליון. הגיליון המפורסם מחזיר 307 אל
+// googleusercontent ונטען עם {cache:"no-store"} בכל כניסה מחדש — כשתי שניות
+// כשזה עובד, וגריד ריק בכל פעם שגוגל איטי, מגביל, או חסום ברשת של הלקוח.
+// data.csv יושב על אותו דומיין מאחורי ה-CDN, ולכן הגריד נצבע מיד; הגיליון
+// מרענן אותו ברקע, כך שעריכות בגיליון ממשיכות להיכנס בלי בנייה מחדש.
+function applyCSV(text, isRefresh){
+  const items = parseCSV(text).filter(isSale).filter(it=>it.j_number);
+  if(!items.length) return false;                       // לא למחוק גריד תקין
+  // מיון לפי מחיר החיסול מהזול ליקר; "מחיר לפי פנייה" בסוף
+  items.sort((a,b)=>(num(a.price_usd)??Infinity)-(num(b.price_usd)??Infinity));
+  ITEMS = items;
+  $("state").style.display="none";
+  render();
+  if(!isRefresh && location.hash){ const j=location.hash.slice(1); if(ITEMS.find(x=>x.j_number===j)) openItem(j); }
+  return true;
+}
+
+fetch(BASE+"data.csv").then(r=>{ if(!r.ok) throw new Error(r.status); return r.text(); })
+  .then(t=>applyCSV(t,false))
+  .catch(()=>false)
+  .then(painted=>{
+    fetch(CSV_URL,{cache:"no-store"}).then(r=>{ if(!r.ok) throw new Error(r.status); return r.text(); })
+      .then(t=>applyCSV(t,!!painted))
+      .catch(e=>{ if(!painted) $("state").textContent="לא הצלחנו לטעון את הארכיון ("+e.message+"). רעננו ונסו שוב."; });
+  });
 </script>
 </body>
 </html>
