@@ -1,0 +1,34 @@
+name: Black Friday launch (merge bf-2026 into main)
+
+# 18.10.2026 Daniel: the Archive comes back for Black Friday and runs through December,
+# and it must not be mentioned anywhere before. The copy waits on branch bf-2026 and goes
+# live here at 00:00 Israel on Friday 27.11.2026 (= 22:00 UTC on 26.11); the BF email follows at 15:00.
+on:
+  schedule:
+    - cron: '0 22 26 11 *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-data   # same group as the data refresh, so the two never push at once
+  cancel-in-progress: false
+
+jobs:
+  launch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Merge bf-2026 (2026 only)
+        run: |
+          set -euo pipefail
+          if [ "$(date -u +%Y)" != "2026" ] && [ "${{ github.event_name }}" != "workflow_dispatch" ]; then echo "not 2026, skipping"; exit 0; fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin bf-2026
+          if git merge-base --is-ancestor origin/bf-2026 HEAD; then echo "already live"; exit 0; fi
+          git merge --no-ff origin/bf-2026 -m "Black Friday 2026: the Archive is back until 31 December"
+          git push origin HEAD:main
